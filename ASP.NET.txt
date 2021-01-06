@@ -1,0 +1,58 @@
+
+// Generate QR public void QRPay() {
+
+
+string keyId = "fa9b51d6-412f-4f4c-87e3-92b9ce3a4084"; string b2sUrl = ""; string s2sUrl = "";
+
+
+string txnReq = "{ \"ss\":\"1\",\"msg\":{ \"netsMid\":\"UMID_877767002\",\"tid\":\"\",\"submissionMode\":\"B\"," + "\"txnAmount\":\"10\",\"merchantTxnRef\":\"" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + "\",\"merchantTxnDtm\":\"" + DateTime.Now.ToString("yyyyMMdd HH:mm:ss.fff") + "\",\"paymentType\":\"SALE\"," + "\"currencyCode\":\"SGD\",\"paymentMode\":\"\",\"merchantTimeZone\":\"+8:00\",\"b2sTxnEndURL\":\""+b2sUrl+"\"," + "\"b2sTxnEndURLParam\":\"&var1=test&var2=test1\",\"s2sTxnEndURL\":\""+s2sUrl+"\",\"s2sTxnEndURLParam\":\"&var3=test&var4=test1\"," + "\"clientType\":\"W\",\"supMsg\":\"\",\"netsMidIndicator\":\"U\",\"ipAddress\":\"127.0.0.1\",\"language\":\"en\"} }";
+
+
+byte[] Shastr = ComputeSha256HashForQR(txnReq, secretKey: "9905c100-c94f-4327-afd5-4d8f818062f2");
+
+
+string hmac = Base64EncodeForQR(Shastr);
+
+
+string htmlQR = ""; htmlQR += ""; htmlQR += ""; htmlQR += ""; htmlQR += ""; htmlQR += ""; htmlQR += ""; htmlQR += "
+
+"; htmlQR += ""; htmlQR += "
+"; htmlQR += "
+"; htmlQR += "
+"; htmlQR += ""; htmlQR += ""; htmlQR += "";
+
+Response.Write(htmlQR); Response.End();
+
+
+}
+
+
+// b2s public void QRPleaseWait() { clsDomain_Email e = new clsDomain_Email(); string hmac = Request["hmac"]; string message = Request["message"]; string myDecodedString = HttpUtility.UrlDecode(message);
+
+
+var SteamDetails = JsonConvert.DeserializeObject(myDecodedString); Response.Write(myDecodedString); Response.End();
+
+
+}
+
+
+//s2s public void QRResponseData([FromBody]ENETSModels e) { // Get Response frepm eNETS var bodyStream = new StreamReader(System.Web.HttpContext.Current.Request.InputStream); bodyStream.BaseStream.Seek(0, SeekOrigin.Begin); var txnRes = bodyStream.ReadToEnd();
+
+
+if (Request.Headers["hmac"] != null) { String macFromGW = Request.Headers["hmac"].ToString(); byte[] Shastr = ComputeSha256HashForQR(txnRes, secretKey: "9905c100-c94f-4327-afd5-4d8f818062f2"); string hmac = Base64EncodeForQR(Shastr);
+
+
+if (hmac.Equals(macFromGW, StringComparison.InvariantCultureIgnoreCase)) { //hmac success } else { //hmac fails }
+
+
+} else { //hmac empty } }
+
+
+private byte[] ComputeSha256HashForQR(String txnReq, String secretKey) { string rawData = txnReq + secretKey; using (SHA256 sha256Hash = SHA256.Create()) { byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData)); return bytes; }
+
+
+}
+
+
+private static string Base64EncodeForQR(byte[] plainText) { return System.Convert.ToBase64String(plainText); }
+

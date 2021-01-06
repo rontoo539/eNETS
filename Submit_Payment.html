@@ -1,0 +1,22 @@
+<html> <head> <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
+<title>Merchant Page</title> <script src="https://uat2.enets.sg/GW2/js/jquery-3.1.1.min.js" type="text/javascript"></script> 
+<script src="https://uat2.enets.sg/GW2/pluginpages/env.jsp"></script> 
+<script type="text/javascript" src="https://uat2.enets.sg/GW2/js/apps.js"></script> 
+
+</head> <body> 
+<input  id="txnReq" name="txnReq" value=''> 
+<input id="keyId" name="keyId" value=''> 
+<input   id="hmac" name="hmac" value=''> 
+
+<div id="anotherSection"> <fieldset> <div id="ajaxResponse"></div> </fieldset> </div> 
+
+<script> window.onload = function() { 
+
+var txnReq = '{"ss":"1","msg":{"netsMid":"UMID_877772003","tid":"","submissionMode":"B","txnAmount":"1000","merchantTxnRef":"test20181221001","merchantTxnDtm":"20170605 10:26:51.989","paymentType":"SALE","currencyCode":"SGD","paymentMode":"","merchantTimeZone":"+8:00","b2sTxnEndURL":"https://httpbin.org/post","b2sTxnEndURLParam":"","s2sTxnEndURL":"https://sit2.enets.sg/MerchantApp/rest/s2sTxnEnd","s2sTxnEndURLParam":"","clientType":"W","supMsg":"","netsMidIndicator":"U","ipAddress":"127.0.0.1","language":"en"}}';
+//secret key - 38a4b473-0295-439d-92e1-ad26a8c60279
+var keyId = '154eb31c-0f72-45bb-9249-84a1036fd1ca'; // once api key is available, assign a value 
+var hmac = 'MuzTcqkMaL0dfvWBq8I7P0WUusCczD9zAVJSYtEBHp0='; // once hmac is available, assign a value s
+sendPayLoad(txnReq, hmac, keyId); 
+
+}; 
+</script> </body> </html>
